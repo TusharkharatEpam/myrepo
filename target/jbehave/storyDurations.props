@@ -1,0 +1,6 @@
+#org.jbehave.core.embedder.StoryManager
+#Tue Oct 16 12:32:17 IST 2018
+stories/searchFlight_OneWayRestService.story=301000
+threads=1
+total=301000
+threadAverage=301000
