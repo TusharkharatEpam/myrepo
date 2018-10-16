@@ -70,7 +70,7 @@ import com.thoughtworks.paranamer.NullParanamer;
 		String storyLocation = System.getProperty("user.dir")
 		        + "/src/test/resources";
 		List<String> storyPaths = storyFinder.findPaths(storyLocation,
-		        Arrays.asList("**/searchFlight_OneWayRestService.story"), Arrays.asList(""));
+		        Arrays.asList("**/*.story"), Arrays.asList(""));
 		return storyPaths;
 		// return Arrays.asList("stories/Sqr.story");
 	    }
