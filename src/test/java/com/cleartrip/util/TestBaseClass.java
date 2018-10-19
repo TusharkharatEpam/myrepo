@@ -89,7 +89,7 @@ public class TestBaseClass {
 	public List<String> getAllDropDownValues(WebElement locator) {
 		Select select = new Select(locator);
 		List<WebElement> elementList = select.getOptions();
-		List<String> valueList = new LinkedList<String>();
+		List<String> valueList = new LinkedList<>();
 
 		for (WebElement element : elementList) {
 			valueList.add(element.getText());

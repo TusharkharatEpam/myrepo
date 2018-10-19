@@ -63,9 +63,9 @@ import com.thoughtworks.paranamer.NullParanamer;
 		StoryFinder storyFinder = new StoryFinder();
 		String storyLocation = System.getProperty("user.dir")
 		        + "/src/test/resources";
-		List<String> storyPaths = storyFinder.findPaths(storyLocation,
+		return storyFinder.findPaths(storyLocation,
 		        Arrays.asList("**/*.story"), Arrays.asList(""));
-		return storyPaths;
+	
 	    }
 
 	    @Override

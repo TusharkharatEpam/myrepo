@@ -46,14 +46,14 @@ public class SearchFlightOneWaySteps {
 	@When("enters the $departDate and $returnDate for $tripType")
 	public void whenEntersTheDepartureDate(@Named("departDate") String departDate,
 			@Named("returnDate") String returnDate, @Named("tripType") String tripType) {
-		searchFlightPage.enterFlightDate(departDate, returnDate, tripType);
+		searchFlightPage.enterFlightDate(tripType);
 	}
 
 	@When("user enter flight $source and $destination")
 	public void whenUserEnterFlightSourceAndDestination(@Named("source") String source,
 			@Named("destination") String destination) {
 		log.info("usser entering the source And Destination :" + source + " " + destination);
-		searchFlightPage.enteFlightrSourceAndDestination(source, destination);
+		searchFlightPage.enteFlightrSourceAndDestination();
 	}
 
 	@When("search for flights")
@@ -73,7 +73,6 @@ public class SearchFlightOneWaySteps {
 	@Then("user should see all flights based on deftails provided")
 	public void thenUserShouldSeeAllFlightsBasedOnDeftailsProvided() {
 		log.info("User can now see the results");
-		System.out.println("Finished");
 	}
 
 	@Given("user search for $tripType flights")

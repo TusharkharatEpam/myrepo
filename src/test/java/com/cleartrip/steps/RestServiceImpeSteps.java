@@ -1,9 +1,9 @@
 package com.cleartrip.steps;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,13 @@ import org.springframework.stereotype.Component;
 
 import com.cleartrip.rest.RestServiceUtility;
 import com.cleartrip.util.CleartripConstant;
+import com.cleartrip.util.ExelReaderUtil;
 
 import io.restassured.response.Response;
 @Component
 public class RestServiceImpeSteps{
+	
+	Map<String, Object> excelDataMap = new HashMap<>();
 	
 	private Logger log=Logger.getLogger(RestServiceImpeSteps.class);
 	
@@ -26,35 +29,31 @@ public class RestServiceImpeSteps{
 	private RestServiceUtility restServiceUtility;
 	Response response;
 	@When("user hit the rest service with parameters $trip_type $source $destination  $depart_date  $adults $children $infants $origin $from $to $class $ver $type")
-	public void whenUserHitTheRestServiceWithParametersTrip_typeSourceDestinationDepart_dateAdultsChildrenInfantsOriginFromToClassVerType(
-			@Named("trip_type") String trip_type,@Named("source") String source,@Named("destination") String destination,
-			@Named("depart_date") String depart_date,@Named("adults") String adults,@Named("children") String children,
-			@Named("infants") String infants,@Named("origin") String origin,@Named("from") String from,
-			@Named("to") String to,@Named("class") String class1,@Named("ver") String ver,@Named("type") String type){
+	public void getResponseOfCleartripService() throws IOException{
+		excelDataMap = ExelReaderUtil.readExcel(env.getProperty(CleartripConstant.EXCEL_PATH),
+				env.getProperty(CleartripConstant.EXCEL_NAME),CleartripConstant.RESTSERVICE_CLEARTRIP);
 				
-		 Map<String, String> restMap = getMapObjForRest(trip_type, destination, depart_date, adults, children, infants,
-				origin, from, to, class1, ver, type);
+		 Map<String, String> restMap = getMapObjForRest();
 		 String url=env.getProperty(CleartripConstant.CLEARTRIP_ONEWAY_URL);
 		 response=restServiceUtility.getRequest(url,restMap);
+		log.info("Response is =================>:"+response.asString());
 		
 	}
 
-	private Map<String, String> getMapObjForRest(String trip_type, String destination, String depart_date,
-			String adults, String children, String infants, String origin, String from, String to, String class1,
-			String ver, String type) {
-		Map<String, String> restMap=new HashMap<String, String>();
-		restMap.put("trip_type", trip_type);
-		restMap.put("origin", origin);
-		restMap.put("from",from);
-		restMap.put("destination",destination);
-		restMap.put("to", to);
-		restMap.put("depart_date", depart_date);
-		restMap.put("adults",adults);
-		restMap.put("childs", children);
-		restMap.put("infants", infants);
-		restMap.put("class",class1);
-		restMap.put("ver", ver);
-		restMap.put("type", type);
+	private Map<String, String> getMapObjForRest() {
+		Map<String, String> restMap=new HashMap<>();
+		restMap.put("trip_type", (String) excelDataMap.get("trip_type"));
+		restMap.put("origin", (String) excelDataMap.get("origin"));
+		restMap.put("from",(String) excelDataMap.get("from"));
+		restMap.put("destination",(String) excelDataMap.get("destination"));
+		restMap.put("to", (String) excelDataMap.get("to"));
+		restMap.put("depart_date", (String) excelDataMap.get("depart_date"));
+		restMap.put("adults",(String) excelDataMap.get("adults"));
+		restMap.put("childs", (String) excelDataMap.get("children"));
+		restMap.put("infants", (String) excelDataMap.get("infants"));
+		restMap.put("class",(String) excelDataMap.get("class1"));
+		restMap.put("ver", (String) excelDataMap.get("ver"));
+		restMap.put("type", (String) excelDataMap.get("type"));
 		return restMap;
 	}
 

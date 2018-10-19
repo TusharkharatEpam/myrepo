@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -22,23 +23,19 @@ import com.cleartrip.util.TestBaseClass;
 @Component
 public class SearchFlightPage extends TestBaseClass {
 
-	public SearchFlightPage() {
-
-	}
-
 	private static Logger log = Logger.getLogger(SearchFlightPage.class);
 
 	@Autowired
 	TestBaseClass testBaseClass;
 
 	@FindBy(id = "OneWay")
-	WebElement tripType_OneWay;
+	WebElement tripTypeOneWay;
 
 	@FindBy(id = "RoundTrip")
-	WebElement tripType_RoundTrip;
+	WebElement tripTypeRoundTrip;
 
 	@FindBy(id = "MultiCity")
-	WebElement tripType_MultiCity;
+	WebElement tripTypeMultiCity;
 
 	@FindBy(id = "FromTag")
 	WebElement departFrom;
@@ -50,7 +47,7 @@ public class SearchFlightPage extends TestBaseClass {
 	WebElement adults;
 
 	@FindBy(id = "Childrens")
-	WebElement Childrens;
+	WebElement childrens;
 
 	@FindBy(id = "Infants")
 	WebElement infants;
@@ -65,7 +62,7 @@ public class SearchFlightPage extends TestBaseClass {
 	Environment env;
 
 	WebDriver driver;
-	Map<String, Object> excelDataMap = new HashMap<String, Object>();
+	Map<String, Object> excelDataMap = new HashMap<>();
 
 	private String departDateString = "//td[@data-month=9]/child::a[text()='%s']";
 	private String returnDateString = "//td[@data-month=9]/child::a[text()='%s']";
@@ -90,14 +87,14 @@ public class SearchFlightPage extends TestBaseClass {
 		Boolean flag;
 		log.info("tripType is====================> :" + tripType);
 		if (TripType.MULTICITY.toString().equals(tripType)) {
-			flag = tripType_MultiCity.isSelected();
-			selectTrip(flag, tripType_MultiCity);
+			flag = tripTypeMultiCity.isSelected();
+			selectTrip(flag, tripTypeMultiCity);
 		} else if (TripType.ONEWAY.toString().equals(tripType)) {
-			flag = tripType_OneWay.isSelected();
-			selectTrip(flag, tripType_OneWay);
+			flag = tripTypeOneWay.isSelected();
+			selectTrip(flag, tripTypeOneWay);
 		} else if (TripType.ROUNDTRIP.toString().equals(tripType)) {
-			flag = tripType_RoundTrip.isSelected();
-			selectTrip(flag, tripType_RoundTrip);
+			flag = tripTypeRoundTrip.isSelected();
+			selectTrip(flag, tripTypeRoundTrip);
 		} else {
 			log.info("Please select proper trip type");
 		}
@@ -109,33 +106,40 @@ public class SearchFlightPage extends TestBaseClass {
 		} else {
 			try {
 				highlight(driver, tripTypeToBeSelected);
-			} catch (InterruptedException e) {
-				log.error("Error Occured while highlighting :", e);
+			} 
+			catch (InterruptedException e) {
+				log.log(Level.WARN, CleartripConstant.INTURRPTED, e);
+			    Thread.currentThread().interrupt();
+
 			}
 			tripTypeToBeSelected.click();
 		}
 	}
 
-	public void enteFlightrSourceAndDestination(String source, String dest) {
+	public void enteFlightrSourceAndDestination() {
 		log.info("Inside method enteFlightrSourceAndDestination ");
-		if (null != excelDataMap.get("source") && !("").equalsIgnoreCase((String) excelDataMap.get("source"))) {
+		String src= (String) excelDataMap.get(CleartripConstant.SOURCE);
+		if (null != src && !("").equalsIgnoreCase(src)) {
 			try {
 				highlight(driver, departFrom);
-				departFrom.sendKeys((excelDataMap.get("source").toString()));
+				departFrom.sendKeys(src);
 			} catch (InterruptedException e) {
-				log.error("Error Occured while highlighting :", e);
+				log.log(Level.WARN,CleartripConstant.INTURRPTED, e);
+			    Thread.currentThread().interrupt();
+
 			}
 
 		}
+		String dest= (String) excelDataMap.get(CleartripConstant.DESTINATION);
 
-		if (null != excelDataMap.get("destination")
-				&& !("").equalsIgnoreCase((String) excelDataMap.get("destination"))) {
-
+		if (null != dest && !("").equalsIgnoreCase(dest)) {
 			try {
 				highlight(driver, destination);
-				destination.sendKeys(excelDataMap.get("destination").toString());
+				destination.sendKeys(dest);
 			} catch (InterruptedException e) {
-				log.error("Error Occured while highlighting :", e);
+				log.log(Level.WARN, CleartripConstant.INTURRPTED, e);
+			    Thread.currentThread().interrupt();
+
 			}
 
 		}
@@ -145,7 +149,7 @@ public class SearchFlightPage extends TestBaseClass {
 	public void entersDetailsOfAdultChildrenAndInfants(String adult, String child, String infant) {
 		log.info("Inside method entersDetailsOfAdultChildrenAndInfants ");
 		testBaseClass.SelectUsingVisibleText(adults, adult);
-		testBaseClass.SelectUsingVisibleText(Childrens, child);
+		testBaseClass.SelectUsingVisibleText(childrens, child);
 		testBaseClass.SelectUsingVisibleText(infants, infant);
 	}
 
@@ -153,7 +157,7 @@ public class SearchFlightPage extends TestBaseClass {
 		searchFlightButton.click();
 	}
 
-	public void enterFlightDate(String depart_Date, String return_Date, String tripType) {
+	public void enterFlightDate(String tripType) {
 		log.info("Inside method enterFlightDate ");
 		deparDate.click();
 		departDateString = String.format(departDateString, 25);
