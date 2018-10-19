@@ -1,9 +1,8 @@
 package com.cleartrip.configuration;
 
-	import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
@@ -26,20 +25,15 @@ import org.jbehave.core.steps.MarkUnmatchedStepsAsPending;
 import org.jbehave.core.steps.PrintStreamStepMonitor;
 import org.jbehave.core.steps.StepFinder;
 import org.jbehave.core.steps.spring.SpringStepsFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.stereotype.Component;
 
 import com.thoughtworks.paranamer.NullParanamer;
 
 
 	public class JConfigurationStories extends JUnitStories {
-
 		
 	    private Configuration configuration;
-
 	    public JConfigurationStories() {
 		super();
 		configuration = new MostUsefulConfiguration();
@@ -72,18 +66,15 @@ import com.thoughtworks.paranamer.NullParanamer;
 		List<String> storyPaths = storyFinder.findPaths(storyLocation,
 		        Arrays.asList("**/*.story"), Arrays.asList(""));
 		return storyPaths;
-		// return Arrays.asList("stories/Sqr.story");
 	    }
 
 	    @Override
 	    public Configuration configuration() {
 		return configuration;
-
 	    }
 
 	    @Override
 	    public InjectableStepsFactory stepsFactory() {
-	    	
 	        	 AbstractApplicationContext  context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
 	    	 	 return new SpringStepsFactory(configuration, context);
 		

@@ -7,9 +7,6 @@ public class DriverManagerFactory {
 		case CHROME:
 			driverManager=new ChromeDriverManager();
 			break;
-		/*case FIREFOX:
-			driverManager=new FireFoxDriverManager();
-			break;*/
 		default:
 			break;
 		}

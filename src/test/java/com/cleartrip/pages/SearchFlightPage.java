@@ -11,14 +11,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.cleartrip.driver.TripType;
+import com.cleartrip.util.CleartripConstant;
 import com.cleartrip.util.ExelReaderUtil;
 import com.cleartrip.util.TestBaseClass;
 
 @Component
-public class SearchFlightPage extends TestBaseClass{
+public class SearchFlightPage extends TestBaseClass {
 
 	public SearchFlightPage() {
 
@@ -59,6 +61,9 @@ public class SearchFlightPage extends TestBaseClass{
 	@FindBy(id = "DepartDate")
 	WebElement deparDate;
 
+	@Autowired
+	Environment env;
+
 	WebDriver driver;
 	Map<String, Object> excelDataMap = new HashMap<String, Object>();
 
@@ -69,9 +74,8 @@ public class SearchFlightPage extends TestBaseClass{
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 		try {
-			excelDataMap = ExelReaderUtil.readExcel(
-					"D:\\automation_workspace\\automation_workspace\\src\\test\\resources\\data\\",
-					"cleartrip_testdata.xlsx", "searchFlight_OneWay");
+			excelDataMap = ExelReaderUtil.readExcel(env.getProperty(CleartripConstant.EXCEL_PATH),
+					env.getProperty(CleartripConstant.EXCEL_NAME), env.getProperty(CleartripConstant.ONEWAY_SHEET));
 		} catch (IOException e) {
 			log.error("Error occured while reading the excel from given path ", e);
 		}
@@ -104,9 +108,9 @@ public class SearchFlightPage extends TestBaseClass{
 			log.info("Already selected :" + tripTypeToBeSelected);
 		} else {
 			try {
-				highlight(driver,tripTypeToBeSelected);
+				highlight(driver, tripTypeToBeSelected);
 			} catch (InterruptedException e) {
-				log.error("Error Occured while highlighting :",e);
+				log.error("Error Occured while highlighting :", e);
 			}
 			tripTypeToBeSelected.click();
 		}
@@ -114,31 +118,28 @@ public class SearchFlightPage extends TestBaseClass{
 
 	public void enteFlightrSourceAndDestination(String source, String dest) {
 		log.info("Inside method enteFlightrSourceAndDestination ");
-		// From excel sheet
 		if (null != excelDataMap.get("source") && !("").equalsIgnoreCase((String) excelDataMap.get("source"))) {
 			try {
-				highlight(driver,departFrom);
+				highlight(driver, departFrom);
 				departFrom.sendKeys((excelDataMap.get("source").toString()));
 			} catch (InterruptedException e) {
-				log.error("Error Occured while highlighting :",e);
+				log.error("Error Occured while highlighting :", e);
 			}
-			
+
 		}
 
-		if (null != excelDataMap.get("destination") && !("").equalsIgnoreCase((String) excelDataMap.get("destination"))) {
-			
+		if (null != excelDataMap.get("destination")
+				&& !("").equalsIgnoreCase((String) excelDataMap.get("destination"))) {
+
 			try {
-				highlight(driver,destination);
+				highlight(driver, destination);
 				destination.sendKeys(excelDataMap.get("destination").toString());
 			} catch (InterruptedException e) {
-				log.error("Error Occured while highlighting :",e);
+				log.error("Error Occured while highlighting :", e);
 			}
-			
+
 		}
 
-		// From example table
-		// departFrom.sendKeys(source);
-		// destination.sendKeys(dest);
 	}
 
 	public void entersDetailsOfAdultChildrenAndInfants(String adult, String child, String infant) {
@@ -146,7 +147,6 @@ public class SearchFlightPage extends TestBaseClass{
 		testBaseClass.SelectUsingVisibleText(adults, adult);
 		testBaseClass.SelectUsingVisibleText(Childrens, child);
 		testBaseClass.SelectUsingVisibleText(infants, infant);
-
 	}
 
 	public void click() {

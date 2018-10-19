@@ -1,21 +1,23 @@
 package com.cleartrip.steps;
-import static org.hamcrest.CoreMatchers.equalTo;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jbehave.core.annotations.*;
-import org.junit.Assert;
+import org.apache.log4j.Logger;
+import org.jbehave.core.annotations.Named;
+import org.jbehave.core.annotations.Then;
+import org.jbehave.core.annotations.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.cleartrip.rest.RestServiceUtility;
+import com.cleartrip.util.CleartripConstant;
 
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 @Component
 public class RestServiceImpeSteps{
+	
+	private Logger log=Logger.getLogger(RestServiceImpeSteps.class);
 	
 	@Autowired 
     private Environment env;
@@ -30,17 +32,17 @@ public class RestServiceImpeSteps{
 			@Named("infants") String infants,@Named("origin") String origin,@Named("from") String from,
 			@Named("to") String to,@Named("class") String class1,@Named("ver") String ver,@Named("type") String type){
 				
-		 Map<String, Object> restMap = getMapObjForRest(trip_type, destination, depart_date, adults, children, infants,
+		 Map<String, String> restMap = getMapObjForRest(trip_type, destination, depart_date, adults, children, infants,
 				origin, from, to, class1, ver, type);
-		 String url=env.getProperty("cleartripOnewayURL");
+		 String url=env.getProperty(CleartripConstant.CLEARTRIP_ONEWAY_URL);
 		 response=restServiceUtility.getRequest(url,restMap);
 		
 	}
 
-	private Map<String, Object> getMapObjForRest(String trip_type, String destination, String depart_date,
+	private Map<String, String> getMapObjForRest(String trip_type, String destination, String depart_date,
 			String adults, String children, String infants, String origin, String from, String to, String class1,
 			String ver, String type) {
-		Map<String,Object> restMap=new HashMap<String, Object>();
+		Map<String, String> restMap=new HashMap<String, String>();
 		restMap.put("trip_type", trip_type);
 		restMap.put("origin", origin);
 		restMap.put("from",from);
@@ -58,17 +60,8 @@ public class RestServiceImpeSteps{
 
 	@Then("validate the response")
 	public void thenValidateTheResponse(){
-		
+		log.info("Reponse is :"+response.asString());
 		response.then().assertThat().statusCode(200);
-	/*	response.then().assertThat().contentType(ContentType.TEXT);
-		response.then().assertThat().header("Content-Length",equalTo("13712"));
-		*/
-		/*if(response.getStatusCode()==200) {
-			Assert.assertTrue(true);
-		}
-		else {
-			Assert.assertTrue(false);
-		}*/
-		System.out.println("Reponse is :"+response.asString());
+		
 	}
 }

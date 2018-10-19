@@ -51,7 +51,6 @@ public class TestBaseClass {
 	public static void highlight(WebDriver driver, WebElement element) throws InterruptedException {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("arguments[0].style.border='4px solid yellow'", element);
-		Thread.sleep(3000);
 		js.executeScript("arguments[0].style.border=''", element);
 	}
 
@@ -99,26 +98,18 @@ public class TestBaseClass {
 	}
 
 	public static String getProperty(String key,String path) {
+		
+		
 		log.debug("Reading properties ....");
 		Properties prop = new Properties();
-		InputStream input = null;
 		String value = null;
-		try {
-			input = new FileInputStream(path+"config.properties");
+		try(InputStream input = new FileInputStream(path)){
 			prop.load(input);
 			value = prop.getProperty(key);
-
-		} catch (IOException ex) {
-			log.error("property file not loaded properly");
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					log.error("exception occured while closing connection");
-				}
-			}
 		}
+		catch (IOException ex) {
+			log.error("property file not loaded properly");
+		} 
 		return value;
 
 	}

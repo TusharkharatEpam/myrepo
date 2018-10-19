@@ -1,6 +1,5 @@
 package com.cleartrip.rest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -13,12 +12,11 @@ import io.restassured.specification.RequestSpecification;
 public class RestServiceUtility {
 
 	
-	public Response getRequest(String baseUri, Map<String, Object> queryparams)
+	public Response getRequest(String baseUri, Map<String, String> queryparams)
 	{
 		RestAssured.baseURI = baseUri;
 		RequestSpecification httpRequest = RestAssured.given().queryParams(queryparams);
 		Response response = httpRequest.get();
-		System.out.println("Reponse is ===========>:" + response.asString());
 		return response;
 	}
 
